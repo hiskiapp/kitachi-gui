@@ -56,7 +56,7 @@
 
             <div class="modal-footer">
                 <div class="flex items-center justify-center space-x-4">
-                    <a href="https://metamask.io/" target="_blank" rel="noreferrer noopener" class="rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark">
+                    <a href="https://deepnote.com/workspace/hiskiapp-491275ec-846d-4455-a0a6-b4cf0204a85f/project/Citra-f2eda121-a31c-4eae-98e6-26bf996b9585/%2FMain.ipynb" target="_blank" rel="noreferrer noopener" class="rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark">
                         Lihat Notebook
                     </a>
                 </div>

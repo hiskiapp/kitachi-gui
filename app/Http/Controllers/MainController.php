@@ -95,7 +95,7 @@ class MainController extends Controller
         $data = $query->get();
         $minPrice = $data->min('price') / 1000;
         $maxPrice = $data->max('price') / 1000;
-        $kitchenSets = $query->paginate(10);
+        $kitchenSets = $query->paginate(12);
         $minPrice = round($minPrice) . 'k';
         $maxPrice = round($maxPrice) . 'k';
         return view('prediction', compact('prediction', 'kitchenSets', 'minPrice', 'maxPrice'));
