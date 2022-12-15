@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('image', 255)->nullable();
             $table->string('url', 255);
             $table->string('currency', 255)->nullable();
-            $table->float('price', 8, 2);
-            $table->float('original_price', 8, 2)->nullable();
-            $table->float('min_price', 8, 2)->nullable();
-            $table->float('max_price', 8, 2)->nullable();
+            $table->float('price', 11, 2);
+            $table->float('original_price', 11, 2)->nullable();
+            $table->float('min_price', 11, 2)->nullable();
+            $table->float('max_price', 11, 2)->nullable();
             $table->string('location', 255)->nullable();
             $table->integer('sold_total')->nullable();
             $table->timestamps();
