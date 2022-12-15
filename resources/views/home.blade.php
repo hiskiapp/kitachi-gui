@@ -102,20 +102,6 @@
                         Deepnote
                     </a>
                 </div>
-
-                <!-- Mobile Menu Actions -->
-                <div class="ml-auto flex lg:hidden">
-                    <!-- Mobile Menu Toggle -->
-                    <button
-                        class="js-mobile-toggle group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-jacarta-100 bg-white transition-colors hover:border-transparent hover:bg-accent focus:border-transparent focus:bg-accent dark:border-transparent dark:bg-white/[.15] dark:hover:bg-accent"
-                        aria-label="open mobile menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
-                            class="h-4 w-4 fill-jacarta-700 transition-colors group-hover:fill-white group-focus:fill-white">
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path d="M18 18v2H6v-2h12zm3-7v2H3v-2h18zm-3-7v2H6V4h12z" />
-                        </svg>
-                    </button>
-                </div>
             </div>
         </header>
 
