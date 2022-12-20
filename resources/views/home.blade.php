@@ -150,14 +150,14 @@
                     </figure>
                     <div class="mx-auto mt-5 max-w-2xl pt-6 text-center">
                         <button id="submit-cam" type="button"
-                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark ml-3">Submit</button>
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark mt-5 ml-5">Submit</button>
                         <div class="inline-block mx-5 text-white text-lg">- atau -</div>
                         <input type="file" name="image" id="image" class="hidden" />
                         <label id="submit-cam-file" for="image"
-                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark">Upload
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark mt-5 ml-5">Upload
                             Image</label>
                         <button id="submit-cam-url"
-                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark ml-3">Upload
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark mt-5 ml-5">Upload
                             Image via URL</button>
                     </div>
                 </div>
@@ -739,7 +739,7 @@
                     <div class="items-center justify-between lg:flex">
                         <div class="relative text-center lg:w-1/2">
                             <img src="img/nft-game/gradient_glow_large_1.png" alt="" loading="lazy"
-                                class="absolute scale-150" />
+                                class="absolute scale-100" />
                             <img src="img/nft-game/na_1.png" alt="" loading="lazy"
                                 class="relative -top-10 inline-block" />
                             <img src="img/hero/3D_elements.png" alt="" loading="lazy"
