@@ -1037,6 +1037,14 @@
                                             window.location.href =
                                                 `/prediction/${data.data.prediction_id}`;
                                         }
+                                    })
+                                    .catch(err => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Terjadi kesalahan!',
+                                        });
+                                        video.play();
                                     });
                             } else {
                                 Swal.fire({

@@ -126,7 +126,6 @@ class MainController extends Controller
 
     private function probability($imageUrl)
     {
-        $imageUrl = str_replace('https://' , 'http://', $imageUrl);
         $url = config('services.ai.kitachi');
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', $url, [
