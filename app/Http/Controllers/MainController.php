@@ -27,14 +27,25 @@ class MainController extends Controller
     public function upload(Request $request)
     {
         try {
-            $this->validate($request, [
-                'data' => 'required'
+            $request->validate([
+                'data' => 'required_without:url',
+                'url' => 'required_without:data',
             ]);
 
-            $image = $request->data;
-            $image = str_replace(array('data:image/png;base64,', ' '), array('', '+'), $image);
-            $imageName = time() . '.png';
-            File::put(storage_path() . '/app/public/' . $imageName, base64_decode($image));
+            $image = null;
+            $imageName = null;
+            if ($request->has('data')) {
+                $image = $request->get('data');
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = base64_decode($image);
+                $imageName = time() . '.png';
+                File::put(storage_path() . '/app/public/' . $imageName, $image);
+            } else if ($request->has('url')) {
+                $image = $request->get('url');
+                $image = file_get_contents($image);
+                $imageName = time() . '.png';
+                File::put(storage_path() . '/app/public/' . $imageName, $image);
+            }
             $imageUrl = asset('storage/' . $imageName);
 
             $probability = $this->probability($imageUrl);

@@ -149,9 +149,16 @@
                         </button>
                     </figure>
                     <div class="mx-auto mt-5 max-w-2xl pt-6 text-center">
-                        <button type="button"
-                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
-                            id="submit-cam">Submit</button>
+                        <button id="submit-cam" type="button"
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark ml-3">Submit</button>
+                        <div class="inline-block mx-5 text-white text-lg">- atau -</div>
+                        <input type="file" name="image" id="image" class="hidden" />
+                        <label id="submit-cam-file" for="image"
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark">Upload
+                            Image</label>
+                        <button id="submit-cam-url"
+                            class="inline-block rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark ml-3">Upload
+                            Image via URL</button>
                     </div>
                 </div>
             </div>
@@ -780,7 +787,6 @@
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia(constraints);
                     handleSuccess(stream);
-                    // play video
                     video.play();
                 } catch (e) {
                     console.error('navigator.getUserMedia error:', e);
@@ -801,10 +807,8 @@
                 thumbCam.classList.add('hidden');
             });
 
-            // upload image from video when #submit-cam clicked using fetch '/upload'
             const submitCam = document.getElementById('submit-cam');
             submitCam.addEventListener('click', () => {
-                // check if camera is on
                 if (video.classList.contains('hidden')) {
                     Swal.fire({
                         icon: 'error',
@@ -818,59 +822,232 @@
                 canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
                 const data = canvas.toDataURL('image/png');
-                // pause video
                 video.pause();
-                // show loading sweetalert
+
                 Swal.fire({
-                    title: 'Mohon tunggu...',
-                    html: 'Sedang memproses gambar',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
+                    title: 'Apakah gambar sudah sesuai?',
+                    imageUrl: data,
+                    imageAlt: 'Gambar yang diambil',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, lanjutkan!',
+                    cancelButtonText: 'Cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Mohon tunggu...',
+                            html: 'Sedang memproses gambar',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        setTimeout(() => {
+                            fetch('/upload', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                                'meta[name="csrf-token"]')
+                                            .getAttribute(
+                                                'content')
+                                    },
+                                    body: JSON.stringify({
+                                        data: data
+                                    })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil!',
+                                            text: 'Gambar berhasil diupload!',
+                                        });
+                                        window.location.href =
+                                            `/prediction/${data.data.prediction_id}`;
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Terjadi kesalahan!',
+                                        });
+                                        video.play();
+                                    }
+                                })
+                                .catch(err => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Terjadi kesalahan!',
+                                    });
+                                    video.play();
+                                });
+                        }, 1000);
+                    } else {
+                        video.play();
                     }
                 });
-                // wait for 1 seconds
-                setTimeout(() => {
-                    // send data to server with fetch (add header csrf token)
-                    fetch('/upload', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute(
-                                        'content')
-                            },
-                            body: JSON.stringify({
-                                data: data
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil!',
-                                    text: 'Gambar berhasil diupload!',
+            });
+
+            const image = document.getElementById('image');
+            image.addEventListener('change', () => {
+                if (image.files.length === 0 || !image.files[0].type.match('image.*')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gambar tidak valid!',
+                    });
+                    return;
+                }
+                Swal.fire({
+                    title: 'Apakah gambar sudah benar?',
+                    imageUrl: URL.createObjectURL(image.files[0]),
+                    imageAlt: 'Gambar yang akan diupload',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, upload gambar',
+                    cancelButtonText: 'Cancel',
+                }).then(function(val) {
+                    if (val.isConfirmed) {
+                        Swal.fire({
+                            title: 'Mohon tunggu...',
+                            html: 'Sedang memproses gambar',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        var imageToBase64 = '';
+                        const reader = new FileReader();
+                        reader.readAsDataURL(image.files[0]);
+                        reader.onload = () => {
+                            fetch('/upload', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                                'meta[name="csrf-token"]')
+                                            .getAttribute(
+                                                'content')
+                                    },
+                                    body: JSON.stringify({
+                                        data: reader.result
+                                    })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil!',
+                                            text: 'Gambar berhasil diupload!',
+                                        });
+                                        window.location.href =
+                                            `/prediction/${data.data.prediction_id}`;
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Terjadi kesalahan!',
+                                        });
+                                    }
+                                })
+                                .catch(err => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Terjadi kesalahan!',
+                                    });
                                 });
-                                window.location.href = `/prediction/${data.data.prediction_id}`;
+                        };
+
+                        reader.onerror = (error) => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Terjadi kesalahan saat memproses gambar! Pastikan gambar valid!',
+                            });
+                        };
+                    }
+                });
+            });
+
+            const submitCamUrl = document.getElementById('submit-cam-url');
+            submitCamUrl.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Masukkan URL gambar',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                }).then(function(val) {
+                    if (val.isConfirmed) {
+                        let url = val.value;
+                        if (url === null || url === '' || (url.match(/\.(jpeg|jpg|gif|png)$/) == null)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'URL tidak valid!',
+                            });
+                            return;
+                        }
+
+                        Swal.fire({
+                            title: 'Apakah gambar sudah benar?',
+                            imageUrl: url,
+                            imageAlt: 'Gambar yang akan diupload',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, upload gambar',
+                            cancelButtonText: 'Cancel',
+                        }).then(function(val) {
+                            if (val.isConfirmed) {
+                                Swal.fire({
+                                    title: 'Mohon tunggu...',
+                                    html: 'Sedang memproses gambar',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+
+                                fetch('/upload', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector(
+                                                    'meta[name="csrf-token"]')
+                                                .getAttribute(
+                                                    'content')
+                                        },
+                                        body: JSON.stringify({
+                                            data: url,
+                                        })
+                                    })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.status === 'success') {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil!',
+                                                text: 'Gambar berhasil diupload!',
+                                            });
+                                            window.location.href =
+                                                `/prediction/${data.data.prediction_id}`;
+                                        }
+                                    });
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
                                     text: 'Terjadi kesalahan!',
                                 });
-                                video.play();
                             }
-                        })
-                        .catch(err => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan!',
-                            });
-                            video.play();
                         });
-                }, 1000);
+                    }
+                });
             });
         </script>
     </body>
