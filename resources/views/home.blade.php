@@ -729,7 +729,7 @@
                                     class="text-fill-transparent inline-block bg-gradient-to-r from-[#FFE993] to-[#FFB770] bg-clip-text font-display text-5xl font-semibold">up
                                     to 85%</span>
                             </div>
-                            <span class="text-lg text-white">Tingkat Akurasi</span>
+                            <span class="text-lg text-white">Tingkat Probabilitas</span>
                         </div>
                     </div>
                 </div>
@@ -1023,7 +1023,7 @@
                                                     'content')
                                         },
                                         body: JSON.stringify({
-                                            data: url,
+                                            url: url,
                                         })
                                     })
                                     .then(res => res.json())
@@ -1036,6 +1036,12 @@
                                             });
                                             window.location.href =
                                                 `/prediction/${data.data.prediction_id}`;
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: 'Terjadi kesalahan!',
+                                            });
                                         }
                                     })
                                     .catch(err => {

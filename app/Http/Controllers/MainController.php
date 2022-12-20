@@ -76,14 +76,14 @@ class MainController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => $res,
-            ]);
+            ], 200);
         } catch (Exception $e) {
             ray()->exception($e);
-            Log::debug($e->getMessage());
+            Log::error($e->getMessage());
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ]);
+            ], 500);
         }
 
     }
@@ -126,6 +126,8 @@ class MainController extends Controller
 
     private function probability($imageUrl)
     {
+        // replace https to http
+        $imageUrl = str_replace('https', 'http', $imageUrl);
         $url = config('services.ai.kitachi');
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', $url, [

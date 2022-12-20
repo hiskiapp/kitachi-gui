@@ -123,7 +123,7 @@
                         <h2 class="mb-2 font-display text-4xl font-medium text-jacarta-700 dark:text-white">
                             {{ $prediction->label->name }}</h2>
                         <div class="mb-8">
-                            <span class="text-sm font-bold text-jacarta-400">Akurasi: </span>
+                            <span class="text-sm font-bold text-jacarta-400">Probabilitas: </span>
                             <a href="javascript:void(0);"
                                 class="text-sm font-bold text-accent">{{ $prediction->accuracy }}</a>
                         </div>

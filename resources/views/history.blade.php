@@ -42,7 +42,7 @@
                                         <th class="px-4 py-3">Tanggal & Jam</th>
                                         <th class="px-4 py-3">Deteksi</th>
                                         <th class="px-4 py-3">Gambar</th>
-                                        <th class="px-4 py-3">Akurasi</th>
+                                        <th class="px-4 py-3">Probabilitas</th>
                                         <th class="px-4 py-3">IP</th>
                                         <th class="px-4 py-3">Browser</th>
                                     </tr>
